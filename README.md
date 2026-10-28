@@ -4,6 +4,8 @@
 
 [繁體中文說明](README.zh-TW.md)
 
+> **Before you start:** this is a pyRevit extension. You need **Revit** (developed on 2024) and **[pyRevit](https://github.com/pyrevitlabs/pyRevit/releases)** installed first. pyRevit is free: download `pyRevit_x.x.x_signed.exe` from its releases page and run it. If your company PC blocks installs, ask IT to use the `..._admin_signed.exe` installer. Then follow [Install](#install).
+
 AI and automated tools can now build Revit models from 2D drawings. The hard part is knowing whether the result is right. Revit's built-in comparisons (ACC version compare, Navisworks Compare) match elements by ID, so they only work on two versions of the *same* file. Two independently built models share no IDs, and those tools report everything as added and deleted.
 
 Revit Model Compare matches elements **by geometry** instead. It tells you, for every duct, pipe, cable tray and conduit run and every fitting, whether the model under test got it right, slightly off, moved, the wrong size, missing, or extra. It also produces colored side-by-side screenshots of the differences.
@@ -43,15 +45,23 @@ Output files (folder `Results_<date_time>`):
 
 ## Install
 
-Requires [pyRevit](https://github.com/pyrevitlabs/pyRevit/releases). Developed and tested with pyRevit 7.0 on Revit 2024; other versions should work but are untested.
+### Step 1: install pyRevit (skip if you already have a *pyRevit* tab in Revit)
 
-**Option A: pyRevit CLI**
+1. Close Revit.
+2. Go to the [pyRevit releases page](https://github.com/pyrevitlabs/pyRevit/releases) and download `pyRevit_x.x.x_signed.exe` from the latest release. Use `pyRevit_x.x.x_admin_signed.exe` if you install for all users or have no install rights.
+3. Run the installer, then start Revit. A **pyRevit** tab appears.
+
+Developed and tested with pyRevit 7.0 on Revit 2024. Other versions should work but are untested.
+
+### Step 2: install Revit Model Compare
+
+#### Option A: pyRevit command line
 
 ```
 pyrevit extend ui ModelCompare https://github.com/kidge-io/revit-model-compare.git
 ```
 
-**Option B: manual**
+#### Option B: manual
 
 1. Download this repository as a ZIP and extract it.
 2. Rename the extracted folder to `ModelCompare.extension` (pyRevit only loads folders ending in `.extension`), for example `D:\pyRevitExt\ModelCompare.extension`.

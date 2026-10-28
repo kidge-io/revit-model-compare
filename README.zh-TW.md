@@ -4,6 +4,8 @@
 
 [English](README.md)
 
+> **開始前請注意**：這是 pyRevit 擴充套件，需要先裝好 **Revit**（本工具在 2024 版開發）和 **[pyRevit](https://github.com/pyrevitlabs/pyRevit/releases)**。pyRevit 免費，到它的 Releases 頁面下載 `pyRevit_x.x.x_signed.exe` 執行即可；公司電腦不能自行安裝的話，請 IT 用 `..._admin_signed.exe` 安裝。接著照[安裝](#安裝)步驟進行。
+
 AI 和自動化工具已經可以從 2D 圖面建出 Revit 模型，難的是確認建得對不對。Revit 現有的比對工具（ACC 版本比對、Navisworks Compare）都靠元件 ID 配對，只能比較**同一個檔案**的前後版本。兩個各自建立的模型 ID 完全不同，這些工具只會回報「全部新增、全部刪除」。
 
 Revit Model Compare 改用**幾何位置**配對。每一段風管、水管、電纜架、導線管和每一個管件，都會判定為：建對了、略有偏差、位置不同、尺寸錯、缺漏，或多出。差異處也會自動產生上色的並排截圖。
@@ -43,15 +45,23 @@ Revit Model Compare 改用**幾何位置**配對。每一段風管、水管、�
 
 ## 安裝
 
-需要先安裝 [pyRevit](https://github.com/pyrevitlabs/pyRevit/releases)。本工具在 pyRevit 7.0 與 Revit 2024 上開發和測試，其他版本應可使用，但尚未測試。
+### 步驟 1：安裝 pyRevit（Revit 裡已經有 *pyRevit* 頁籤就跳過）
 
-**方法 A：pyRevit 命令列**
+1. 關閉 Revit。
+2. 到 [pyRevit Releases 頁面](https://github.com/pyrevitlabs/pyRevit/releases)，下載最新版的 `pyRevit_x.x.x_signed.exe`。要裝給所有使用者，或沒有安裝權限時，改用 `pyRevit_x.x.x_admin_signed.exe`。
+3. 執行安裝檔，再開啟 Revit，功能區會出現 **pyRevit** 頁籤。
+
+本工具在 pyRevit 7.0 與 Revit 2024 上開發和測試，其他版本應可使用，但尚未測試。
+
+### 步驟 2：安裝 Revit Model Compare
+
+#### 方法 A：pyRevit 命令列
 
 ```
 pyrevit extend ui ModelCompare https://github.com/kidge-io/revit-model-compare.git
 ```
 
-**方法 B：手動安裝**
+#### 方法 B：手動安裝
 
 1. 下載本 repo 的 ZIP 並解壓縮。
 2. 把解壓後的資料夾改名為 `ModelCompare.extension`（pyRevit 只載入 `.extension` 結尾的資料夾），例如放在 `D:\pyRevitExt\ModelCompare.extension`。

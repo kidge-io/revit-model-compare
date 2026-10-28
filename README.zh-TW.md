@@ -98,11 +98,19 @@ python -m unittest discover -s tests -v
 
 修改核心時請避免 f-string 等 Python 3 專屬語法。
 
-## 贊助
+## 服務與支援
 
-本工具免費，採用 MIT 授權。如果它幫你省了時間，歡迎[請我喝杯咖啡](https://www.buymeacoffee.com/YOUR_BMC_USERNAME)。
+Revit Model Compare 免費提供，採用 MIT 授權，由[格界科技 KIDGE Ltd.](https://kidge.io)（台北）開發。
 
-由[格界科技 KIDGE Ltd.](https://kidge.io)（台北）開發。AI 輔助 BIM 建模與驗證相關合作，請洽 monica.lin@kidge.io。
+我們也提供：
+
+- **模型比對報告服務**：代為執行比對，交付完整報告（摘要、差異分析、並排截圖、PPT 與 PDF）
+- **導入協助**：依團隊、專案與建模標準建立比對流程
+- **技術支援**：安裝、問題排除與客製化
+
+聯繫信箱：[support@kidge.io](mailto:support@kidge.io)
+
+錯誤回報與功能建議，歡迎在 [GitHub issues](../../issues) 提出。
 
 ## 授權
 

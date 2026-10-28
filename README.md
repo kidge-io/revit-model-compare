@@ -98,11 +98,19 @@ python -m unittest discover -s tests -v
 
 Keep the core free of f-strings and other Python 3-only syntax.
 
-## Support
+## Services and support
 
-This tool is free and MIT-licensed. If it saves you time, you can [buy me a coffee](https://www.buymeacoffee.com/YOUR_BMC_USERNAME).
+Revit Model Compare is free and MIT-licensed, built by [KIDGE Ltd.](https://kidge.io) (Taipei).
 
-Built by [KIDGE Ltd.](https://kidge.io) (Taipei). For AI-assisted BIM modeling and verification work, contact monica.lin@kidge.io.
+We also offer:
+
+- **Model comparison reports**: we run the comparison and deliver a full report (summary, issue analysis, side-by-side screenshots, PPT and PDF)
+- **Adoption support**: setting up the workflow for your team, projects and modeling standards
+- **Technical support**: installation, troubleshooting and customization
+
+Contact: [support@kidge.io](mailto:support@kidge.io)
+
+Bug reports and feature requests are welcome as [GitHub issues](../../issues).
 
 ## License
 

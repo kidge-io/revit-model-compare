@@ -1,0 +1,16 @@
+title:
+  en_us: "Export\nMEP"
+  chinese_t: 匯出 MEP
+  chinese_s: 匯出 MEP
+tooltip:
+  en_us: >-
+    Export MEP elements of the open model (ducts, pipes, cable trays, conduits, their fittings and
+    accessories, terminals, sprinklers, equipment) with ID, family, system, size and coordinates to CSV.
+    Read-only. Run once in each model you want to compare.
+  chinese_t: >-
+    匯出目前模型的 MEP 元件（風管、水管、電纜架、導線管及其管件、附件、風口、撒水頭、設備）
+    的 ID、族群、系統、尺寸與座標成 CSV。只讀取，不修改模型。兩個要比對的模型各跑一次。
+  chinese_s: >-
+    匯出目前模型的 MEP 元件（風管、水管、電纜架、導線管及其管件、附件、風口、撒水頭、設備）
+    的 ID、族群、系統、尺寸與座標成 CSV。只讀取，不修改模型。
+author: KIDGE Ltd.

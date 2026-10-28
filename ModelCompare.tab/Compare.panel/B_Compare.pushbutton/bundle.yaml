@@ -1,0 +1,15 @@
+title:
+  en_us: "Compare\nModels"
+  chinese_t: 比對模型
+  chinese_s: 比對模型
+tooltip:
+  en_us: >-
+    Pick two "Export MEP" CSVs: a reference model and a model under test (e.g. AI- or plugin-generated).
+    Elements are matched by geometry, not by ID. Outputs a summary, an issue list, segment and component
+    tables, and shots.csv for "Issue Shots". Reads the CSVs and the open model's levels only.
+  chinese_t: >-
+    選兩份「匯出 MEP」的 CSV：參考模型與受測模型（例如 AI 或外掛產生的模型），依幾何位置配對比較，
+    輸出比對摘要、差異明細、管段/元件比對表，以及給「差異截圖」用的 shots.csv。不修改模型。
+  chinese_s: >-
+    選兩份「匯出 MEP」的 CSV：參考模型與受測模型，依幾何位置配對比較，輸出比對摘要、差異明細與 shots.csv。
+author: KIDGE Ltd.

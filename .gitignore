@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+Results_*/
+比對結果_*/
+*.png
+!ModelCompare.tab/**/*.png
+!docs/**/*.png

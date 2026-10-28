@@ -1,0 +1,15 @@
+title:
+  en_us: "Issue\nShots"
+  chinese_t: 差異截圖
+  chinese_s: 差異截圖
+tooltip:
+  en_us: >-
+    Reads shots.csv and creates an MC_ 3D view with a section box for each issue, colors the issue
+    elements, greys out other MEP elements and exports a PNG. Run once in each model for side-by-side
+    images. Only adds views; does not modify elements. Run on a copy.
+  chinese_t: >-
+    讀取 shots.csv，為每筆差異建立 MC_ 開頭的 3D 剖面框視圖，差異元件上色、其他 MEP 元件改灰，
+    匯出 PNG。參考模型與受測模型各跑一次，可並排對照。只新增視圖，不修改元件；請在模型副本上執行。
+  chinese_s: >-
+    讀取 shots.csv，為每筆差異建立 3D 剖面框視圖並匯出 PNG。只新增視圖，不修改元件。
+author: KIDGE Ltd.

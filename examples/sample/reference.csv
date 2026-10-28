@@ -1,0 +1,55 @@
+﻿ElementId,UniqueId,CatKey,Category,Family,Type,Level,SystemClassification,SystemType,SystemName,Size,Diameter_mm,Width_mm,Height_mm,MiddleElev_mm,Length_mm,GeomKind,X1,Y1,Z1,X2,Y2,Z2,SX1,SY1,SZ1,SX2,SY2,SZ2,BBMinX,BBMinY,BBMinZ,BBMaxX,BBMaxY,BBMaxZ
+100001,u-100001,OST_DuctCurves,Ducts,Rectangular Duct,Standard,1F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,300,0,3000.0,5700,0,3000.0,,,,,,,-100.0,-400.0,2800.0,6100.0,400.0,3200.0
+100002,u-100002,OST_DuctCurves,Ducts,Rectangular Duct,Standard,1F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,6300,0,3000.0,11700,0,3000.0,,,,,,,5900.0,-400.0,2800.0,12100.0,400.0,3200.0
+100003,u-100003,OST_DuctCurves,Ducts,Rectangular Duct,Standard,1F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,12300,0,3000.0,17700,0,3000.0,,,,,,,11900.0,-400.0,2800.0,18100.0,400.0,3200.0
+100004,u-100004,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,1F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,6000,0,3000.0,,,,,,,,,,5700.0,-300.0,2700.0,6300.0,300.0,3300.0
+100005,u-100005,OST_DuctCurves,Ducts,Rectangular Duct,Standard,1F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,6000,300,3000.0,6000,4000,3000.0,,,,,,,5800.0,100.0,2850.0,6200.0,4200.0,3150.0
+100006,u-100006,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,1F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,12000,0,3000.0,,,,,,,,,,11700.0,-300.0,2700.0,12300.0,300.0,3300.0
+100007,u-100007,OST_DuctCurves,Ducts,Rectangular Duct,Standard,1F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,12000,300,3000.0,12000,4000,3000.0,,,,,,,11800.0,100.0,2850.0,12200.0,4200.0,3150.0
+100008,u-100008,OST_DuctFitting,Duct Fittings,Rectangular Transition,Standard,1F,,Exhaust Air,,800x400-600x400,,,,,,Point,18000,0,3000.0,,,,,,,,,,17700.0,-300.0,2700.0,18300.0,300.0,3300.0
+100009,u-100009,OST_DuctFitting,Duct Fittings,Rectangular to Round Transition,Standard,1F,,Exhaust Air,,600x400-400ø,,,,,,Point,18500,0,3000.0,,,,,,,,,,18200.0,-300.0,2700.0,18800.0,300.0,3300.0
+100010,u-100010,OST_PipeCurves,Pipes,Pipe Types,Standard,1F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,100,2000,2400.0,4900,2000,2400.0,,,,,,,70.0,1970.0,2370.0,4930.0,2030.0,2430.0
+100011,u-100011,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,1F,,Domestic Cold Water,,50-50,,,,,,Point,5000,2000,2400.0,,,,,,,,,,4940,1940,2340.0,5060,2060,2460.0
+100012,u-100012,OST_PipeCurves,Pipes,Pipe Types,Standard,1F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,5100,2000,2400.0,9900,2000,2400.0,,,,,,,5070.0,1970.0,2370.0,9930.0,2030.0,2430.0
+100013,u-100013,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,1F,,Domestic Cold Water,,50-50,,,,,,Point,10000,2000,2400.0,,,,,,,,,,9940,1940,2340.0,10060,2060,2460.0
+100014,u-100014,OST_PipeCurves,Pipes,Pipe Types,Standard,1F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,10100,2000,2400.0,14900,2000,2400.0,,,,,,,10070.0,1970.0,2370.0,14930.0,2030.0,2430.0
+100015,u-100015,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,1F,,Domestic Cold Water,,50-50,,,,,,Point,15000,2000,2400.0,,,,,,,,,,14940,1940,2340.0,15060,2060,2460.0
+100016,u-100016,OST_PipeCurves,Pipes,Pipe Types,Standard,1F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,15100,2000,2400.0,19900,2000,2400.0,,,,,,,15070.0,1970.0,2370.0,19930.0,2030.0,2430.0
+100017,u-100017,OST_CableTray,Cable Trays,Ladder Tray,Standard,1F,,Power,,300x100,,300,100,,6000.0,Curve,0,-1500,3500.0,6000,-1500,3500.0,,,,,,,-150.0,-1650.0,3450.0,6150.0,-1350.0,3550.0
+100018,u-100018,OST_CableTray,Cable Trays,Ladder Tray,Standard,1F,,Power,,300x100,,300,100,,6000.0,Curve,6000,-1500,3500.0,12000,-1500,3500.0,,,,,,,5850.0,-1650.0,3450.0,12150.0,-1350.0,3550.0
+100019,u-100019,OST_DuctCurves,Ducts,Rectangular Duct,Standard,2F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,300,0,7000.0,5700,0,7000.0,,,,,,,-100.0,-400.0,6800.0,6100.0,400.0,7200.0
+100020,u-100020,OST_DuctCurves,Ducts,Rectangular Duct,Standard,2F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,6300,0,7000.0,11700,0,7000.0,,,,,,,5900.0,-400.0,6800.0,12100.0,400.0,7200.0
+100021,u-100021,OST_DuctCurves,Ducts,Rectangular Duct,Standard,2F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,12300,0,7000.0,17700,0,7000.0,,,,,,,11900.0,-400.0,6800.0,18100.0,400.0,7200.0
+100022,u-100022,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,2F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,6000,0,7000.0,,,,,,,,,,5700.0,-300.0,6700.0,6300.0,300.0,7300.0
+100023,u-100023,OST_DuctCurves,Ducts,Rectangular Duct,Standard,2F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,6000,300,7000.0,6000,4000,7000.0,,,,,,,5800.0,100.0,6850.0,6200.0,4200.0,7150.0
+100024,u-100024,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,2F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,12000,0,7000.0,,,,,,,,,,11700.0,-300.0,6700.0,12300.0,300.0,7300.0
+100025,u-100025,OST_DuctCurves,Ducts,Rectangular Duct,Standard,2F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,12000,300,7000.0,12000,4000,7000.0,,,,,,,11800.0,100.0,6850.0,12200.0,4200.0,7150.0
+100026,u-100026,OST_DuctFitting,Duct Fittings,Rectangular Transition,Standard,2F,,Exhaust Air,,800x400-600x400,,,,,,Point,18000,0,7000.0,,,,,,,,,,17700.0,-300.0,6700.0,18300.0,300.0,7300.0
+100027,u-100027,OST_DuctFitting,Duct Fittings,Rectangular to Round Transition,Standard,2F,,Exhaust Air,,600x400-400ø,,,,,,Point,18500,0,7000.0,,,,,,,,,,18200.0,-300.0,6700.0,18800.0,300.0,7300.0
+100028,u-100028,OST_PipeCurves,Pipes,Pipe Types,Standard,2F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,100,2000,6400.0,4900,2000,6400.0,,,,,,,70.0,1970.0,6370.0,4930.0,2030.0,6430.0
+100029,u-100029,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,2F,,Domestic Cold Water,,50-50,,,,,,Point,5000,2000,6400.0,,,,,,,,,,4940,1940,6340.0,5060,2060,6460.0
+100030,u-100030,OST_PipeCurves,Pipes,Pipe Types,Standard,2F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,5100,2000,6400.0,9900,2000,6400.0,,,,,,,5070.0,1970.0,6370.0,9930.0,2030.0,6430.0
+100031,u-100031,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,2F,,Domestic Cold Water,,50-50,,,,,,Point,10000,2000,6400.0,,,,,,,,,,9940,1940,6340.0,10060,2060,6460.0
+100032,u-100032,OST_PipeCurves,Pipes,Pipe Types,Standard,2F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,10100,2000,6400.0,14900,2000,6400.0,,,,,,,10070.0,1970.0,6370.0,14930.0,2030.0,6430.0
+100033,u-100033,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,2F,,Domestic Cold Water,,50-50,,,,,,Point,15000,2000,6400.0,,,,,,,,,,14940,1940,6340.0,15060,2060,6460.0
+100034,u-100034,OST_PipeCurves,Pipes,Pipe Types,Standard,2F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,15100,2000,6400.0,19900,2000,6400.0,,,,,,,15070.0,1970.0,6370.0,19930.0,2030.0,6430.0
+100035,u-100035,OST_CableTray,Cable Trays,Ladder Tray,Standard,2F,,Power,,300x100,,300,100,,6000.0,Curve,0,-1500,7500.0,6000,-1500,7500.0,,,,,,,-150.0,-1650.0,7450.0,6150.0,-1350.0,7550.0
+100036,u-100036,OST_CableTray,Cable Trays,Ladder Tray,Standard,2F,,Power,,300x100,,300,100,,6000.0,Curve,6000,-1500,7500.0,12000,-1500,7500.0,,,,,,,5850.0,-1650.0,7450.0,12150.0,-1350.0,7550.0
+100037,u-100037,OST_DuctCurves,Ducts,Rectangular Duct,Standard,3F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,300,0,11000.0,5700,0,11000.0,,,,,,,-100.0,-400.0,10800.0,6100.0,400.0,11200.0
+100038,u-100038,OST_DuctCurves,Ducts,Rectangular Duct,Standard,3F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,6300,0,11000.0,11700,0,11000.0,,,,,,,5900.0,-400.0,10800.0,12100.0,400.0,11200.0
+100039,u-100039,OST_DuctCurves,Ducts,Rectangular Duct,Standard,3F,,Exhaust Air,,800x400,,800,400,,5400.0,Curve,12300,0,11000.0,17700,0,11000.0,,,,,,,11900.0,-400.0,10800.0,18100.0,400.0,11200.0
+100040,u-100040,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,3F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,6000,0,11000.0,,,,,,,,,,5700.0,-300.0,10700.0,6300.0,300.0,11300.0
+100041,u-100041,OST_DuctCurves,Ducts,Rectangular Duct,Standard,3F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,6000,300,11000.0,6000,4000,11000.0,,,,,,,5800.0,100.0,10850.0,6200.0,4200.0,11150.0
+100042,u-100042,OST_DuctFitting,Duct Fittings,Rectangular Tee,Standard,3F,,Exhaust Air,,800x400-800x400-400x300,,,,,,Point,12000,0,11000.0,,,,,,,,,,11700.0,-300.0,10700.0,12300.0,300.0,11300.0
+100043,u-100043,OST_DuctCurves,Ducts,Rectangular Duct,Standard,3F,,Exhaust Air,,400x300,,400,300,,3700.0,Curve,12000,300,11000.0,12000,4000,11000.0,,,,,,,11800.0,100.0,10850.0,12200.0,4200.0,11150.0
+100044,u-100044,OST_DuctFitting,Duct Fittings,Rectangular Transition,Standard,3F,,Exhaust Air,,800x400-600x400,,,,,,Point,18000,0,11000.0,,,,,,,,,,17700.0,-300.0,10700.0,18300.0,300.0,11300.0
+100045,u-100045,OST_DuctFitting,Duct Fittings,Rectangular to Round Transition,Standard,3F,,Exhaust Air,,600x400-400ø,,,,,,Point,18500,0,11000.0,,,,,,,,,,18200.0,-300.0,10700.0,18800.0,300.0,11300.0
+100046,u-100046,OST_PipeCurves,Pipes,Pipe Types,Standard,3F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,100,2000,10400.0,4900,2000,10400.0,,,,,,,70.0,1970.0,10370.0,4930.0,2030.0,10430.0
+100047,u-100047,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,3F,,Domestic Cold Water,,50-50,,,,,,Point,5000,2000,10400.0,,,,,,,,,,4940,1940,10340.0,5060,2060,10460.0
+100048,u-100048,OST_PipeCurves,Pipes,Pipe Types,Standard,3F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,5100,2000,10400.0,9900,2000,10400.0,,,,,,,5070.0,1970.0,10370.0,9930.0,2030.0,10430.0
+100049,u-100049,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,3F,,Domestic Cold Water,,50-50,,,,,,Point,10000,2000,10400.0,,,,,,,,,,9940,1940,10340.0,10060,2060,10460.0
+100050,u-100050,OST_PipeCurves,Pipes,Pipe Types,Standard,3F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,10100,2000,10400.0,14900,2000,10400.0,,,,,,,10070.0,1970.0,10370.0,14930.0,2030.0,10430.0
+100051,u-100051,OST_PipeFitting,Pipe Fittings,Elbow - Generic,Standard,3F,,Domestic Cold Water,,50-50,,,,,,Point,15000,2000,10400.0,,,,,,,,,,14940,1940,10340.0,15060,2060,10460.0
+100052,u-100052,OST_PipeCurves,Pipes,Pipe Types,Standard,3F,,Domestic Cold Water,,50,,60,60,,4800.0,Curve,15100,2000,10400.0,19900,2000,10400.0,,,,,,,15070.0,1970.0,10370.0,19930.0,2030.0,10430.0
+100053,u-100053,OST_CableTray,Cable Trays,Ladder Tray,Standard,3F,,Power,,300x100,,300,100,,6000.0,Curve,0,-1500,11500.0,6000,-1500,11500.0,,,,,,,-150.0,-1650.0,11450.0,6150.0,-1350.0,11550.0
+100054,u-100054,OST_CableTray,Cable Trays,Ladder Tray,Standard,3F,,Power,,300x100,,300,100,,6000.0,Curve,6000,-1500,11500.0,12000,-1500,11500.0,,,,,,,5850.0,-1650.0,11450.0,12150.0,-1350.0,11550.0

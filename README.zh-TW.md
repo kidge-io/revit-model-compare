@@ -29,8 +29,9 @@ Revit Model Compare 改用**幾何位置**配對。每一段風管、水管、�
 | 一致 | 尺寸相同，位置差 ≤ 5 mm |
 | 位置偏差 | 尺寸相同，位置差 ≤ 50 mm |
 | 斷點差異（管段） | 同中心線、同尺寸，但分段的位置不同 |
-| 位置不同（元件） | 同類型元件在 1 m 內，但差距超過 50 mm |
-| 尺寸不符／類型不符 | 位置吻合，但尺寸或元件類型不同 |
+| 位置不同 | 同尺寸或同類型的構件在 1 m 內，但差距超過 50 mm（管段：平行且側向平移） |
+| 尺寸不符 | 位置吻合，但尺寸不同 |
+| 類型不符 | 位置吻合，但元件種類不同，或族群相同但族群類型不同（例如 45° 與 80° 轉接頭） |
 | 缺漏／多出 | 找不到對應構件 |
 | 非標準族群 | 受測模型用了參考模型沒有的族群 |
 
@@ -64,7 +65,15 @@ pyrevit extend ui ModelCompare https://github.com/kidge-io/revit-model-compare.g
 #### 方法 B：手動安裝
 
 1. 下載本 repo 的 ZIP 並解壓縮。
-2. 把解壓後的資料夾改名為 `ModelCompare.extension`（pyRevit 只載入 `.extension` 結尾的資料夾），例如放在 `D:\pyRevitExt\ModelCompare.extension`。
+2. 找到解壓後**直接包著 `ModelCompare.tab` 和 `lib` 的那一層資料夾**（通常叫 `revit-model-compare-main`），把**這一層**改名為 `ModelCompare.extension`，`ModelCompare.tab` 不要改名。pyRevit 只會載入 `.extension` 結尾的資料夾。改名後放到固定位置，例如 `D:\pyRevitExt\ModelCompare.extension`：
+
+   ```
+   D:\pyRevitExt\
+   └── ModelCompare.extension\    ← 由 revit-model-compare-main 改名
+       ├── ModelCompare.tab\      ← 不要改
+       ├── lib\
+       └── README.md …
+   ```
 3. 在 Revit 中：**pyRevit 頁籤 → pyRevit ▾ → Settings → Custom Extension Directories → Add folder**，選擇**上一層**資料夾（`D:\pyRevitExt`），然後按 **Save Settings and Reload**。
 
 功能區會出現 **ModelCompare** 頁籤，裡面有三個按鈕。

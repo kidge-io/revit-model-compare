@@ -29,8 +29,9 @@ Segments (ducts, pipes, cable trays, conduits) are matched by both endpoints, re
 | Match | Same size, position within 5 mm |
 | Minor offset | Same size, position within 50 mm |
 | Break offset (segments) | Same centerline and size, but the run is split at a different point |
-| Moved (components) | Same type within 1 m, but more than 50 mm away |
-| Size / type mismatch | Position agrees, size or component type does not |
+| Moved | Same size or type within 1 m, but more than 50 mm away (segments: parallel and shifted sideways) |
+| Size mismatch | Position agrees, size does not |
+| Type mismatch | Position agrees, but the component kind differs, or the family is the same and the family type differs (e.g. 45° vs 80° transition) |
 | Missing / Extra | No counterpart found |
 | Non-reference family | The model under test uses a family the reference model does not use |
 
@@ -64,7 +65,15 @@ pyrevit extend ui ModelCompare https://github.com/kidge-io/revit-model-compare.g
 #### Option B: manual
 
 1. Download this repository as a ZIP and extract it.
-2. Rename the extracted folder to `ModelCompare.extension` (pyRevit only loads folders ending in `.extension`), for example `D:\pyRevitExt\ModelCompare.extension`.
+2. Find the extracted folder that directly contains `ModelCompare.tab` and `lib` (usually named `revit-model-compare-main`) and rename **that folder** to `ModelCompare.extension`. Do not rename `ModelCompare.tab`. pyRevit only loads folders ending in `.extension`. Put it somewhere permanent, for example `D:\pyRevitExt\ModelCompare.extension`:
+
+   ```
+   D:\pyRevitExt\
+   └── ModelCompare.extension\    ← renamed from revit-model-compare-main
+       ├── ModelCompare.tab\      ← leave as is
+       ├── lib\
+       └── README.md …
+   ```
 3. In Revit: **pyRevit tab → pyRevit ▾ → Settings → Custom Extension Directories → Add folder**, pick the *parent* folder (`D:\pyRevitExt`), then **Save Settings and Reload**.
 
 A **ModelCompare** tab with the three buttons appears.

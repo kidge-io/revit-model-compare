@@ -227,6 +227,11 @@ def short_level(lv):
     return text_type(lv or u'').split(u'、')[0]
 
 
+def type_changed(r, q):
+    """Same family but a different family type (e.g. '45 Degree' -> '80 Degree')."""
+    return (r.get('Family') == q.get('Family') and (r.get('Type') or u'') != (q.get('Type') or u''))
+
+
 def system_of(r):
     return r.get('SystemType') or NO_SYSTEM
 
@@ -276,7 +281,7 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
             dd = min(d1, d2)
             if dd < bestd:
                 best, bestd = j, dd
-        rec = dict(owner_id=r['ElementId'], owner_size=r.get('Size'), owner_family=r.get('Family'),
+        rec = dict(ref_id=r['ElementId'], ref_size=r.get('Size'), ref_family=r.get('Family'),
                    disc=r['Disc'], category=r.get('Category'), system=system_of(r),
                    floor=r['Floor'], level=r.get('Level'), length=r.get('Length_mm'),
                    x=m[0], y=m[1], z=m[2], kind=u'管段', minz=r.get('BBMinZ'))
@@ -284,18 +289,23 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
             used.add(best)
             q = ad[best]
             size_ok = text_type(r.get('Size')) == text_type(q.get('Size'))
-            st = u'一致' if (size_ok and bestd <= EXACT) else (u'尺寸不符' if not size_ok else u'位置偏差')
+            if not size_ok:
+                st = u'尺寸不符'
+            elif type_changed(r, q):
+                st = u'類型不符'
+            else:
+                st = u'一致' if bestd <= EXACT else u'位置偏差'
             rev = (dist(a1, p2(q)) + dist(a2, p1(q))) < (dist(a1, p1(q)) + dist(a2, p2(q)))
-            rec.update(status=st, ai_id=q['ElementId'], ai_size=q.get('Size'), ai_family=q.get('Family'),
-                       dev_mm=bestd, reversed=rev)
+            rec.update(status=st, test_id=q['ElementId'], test_size=q.get('Size'), test_family=q.get('Family'),
+                       ref_type=r.get('Type'), test_type=q.get('Type'), dev_mm=bestd, reversed=rev)
         else:
             rec.update(status=u'缺漏')
         seg_res.append(rec)
     for j, q in enumerate(ad):
         if j not in used:
             m = mid(p1(q), p2(q))
-            seg_res.append(dict(status=u'多出', ai_id=q['ElementId'], ai_size=q.get('Size'),
-                                ai_family=q.get('Family'), disc=q['Disc'], category=q.get('Category'),
+            seg_res.append(dict(status=u'多出', test_id=q['ElementId'], test_size=q.get('Size'),
+                                test_family=q.get('Family'), disc=q['Disc'], category=q.get('Category'),
                                 system=system_of(q), floor=q['Floor'], level=q.get('Level'),
                                 length=q.get('Length_mm'), x=m[0], y=m[1], z=m[2], kind=u'管段',
                                 minz=q.get('BBMinZ')))
@@ -326,12 +336,12 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
     extra = [x for x in seg_res if x['status'] == u'多出']
     taken = set()
     for mrec in miss:
-        r = o_by[mrec['owner_id']]
+        r = o_by[mrec['ref_id']]
         best = None
         for k, xrec in enumerate(extra):
-            if k in taken or xrec.get('ai_size') != mrec.get('owner_size') or xrec['disc'] != mrec['disc']:
+            if k in taken or xrec.get('test_size') != mrec.get('ref_size') or xrec['disc'] != mrec['disc']:
                 continue
-            q = a_by[xrec['ai_id']]
+            q = a_by[xrec['test_id']]
             ratio, perp = relation(r, q)
             if perp <= TOL and ratio >= 0.5 and (best is None or ratio > best[1]):
                 best = (k, ratio, q)
@@ -340,10 +350,45 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
             taken.add(k)
             a1, a2 = p1(r), p2(r)
             dev = min(max(dist(a1, p1(q)), dist(a2, p2(q))), max(dist(a1, p2(q)), dist(a2, p1(q))))
-            mrec.update(status=u'斷點差異', ai_id=q['ElementId'], ai_size=q.get('Size'),
-                        ai_family=q.get('Family'), dev_mm=dev,
+            mrec.update(status=u'斷點差異', test_id=q['ElementId'], test_size=q.get('Size'),
+                        test_family=q.get('Family'), dev_mm=dev,
                         len_diff_mm=(q.get('Length_mm') or 0) - (r.get('Length_mm') or 0))
     drop = set(id(extra[k]) for k in taken)
+    seg_res = [x for x in seg_res if id(x) not in drop]
+
+    # ---------- segments, pass 3: same size, parallel, shifted sideways within 1 m -> moved ----------
+    miss = [x for x in seg_res if x['status'] == u'缺漏']
+    extra = [x for x in seg_res if x['status'] == u'多出']
+    cand = []
+    for mi, mrec in enumerate(miss):
+        r = o_by[mrec['ref_id']]
+        u = sub(p2(r), p1(r))
+        L = norm(u)
+        if L == 0:
+            continue
+        for xi, xrec in enumerate(extra):
+            if xrec['disc'] != mrec['disc'] or xrec.get('test_size') != mrec.get('ref_size'):
+                continue
+            q = a_by[xrec['test_id']]
+            w = sub(p2(q), p1(q))
+            Lw = norm(w)
+            if Lw == 0 or abs(dot(u, w)) / (L * Lw) < 0.999:
+                continue
+            dd = dist(mid(p1(r), p2(r)), mid(p1(q), p2(q)))
+            if dd <= FIT_NEAR:
+                cand.append((dd, mi, xi))
+    cand.sort()
+    um, ux = set(), set()
+    for dd, mi, xi in cand:
+        if mi in um or xi in ux:
+            continue
+        um.add(mi)
+        ux.add(xi)
+        mrec, xrec = miss[mi], extra[xi]
+        mrec.update(status=u'位置不同', test_id=xrec['test_id'], test_size=xrec.get('test_size'),
+                    test_family=xrec.get('test_family'), dev_mm=dd,
+                    len_diff_mm=(xrec.get('length') or 0) - (mrec.get('length') or 0))
+    drop = set(id(extra[xi]) for xi in ux)
     seg_res = [x for x in seg_res if id(x) not in drop]
 
     # ---------- centerline coverage (independent of how runs are split) ----------
@@ -411,11 +456,11 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
                    category=base.get('Category'), disc=base['Disc'], system=system_of(base),
                    minz=base.get('BBMinZ'))
         if r is not None:
-            rec.update(owner_id=r['ElementId'], owner_kind=r['Kind'], owner_family=r.get('Family'),
-                       owner_size=r.get('Size'))
+            rec.update(ref_id=r['ElementId'], ref_kind=r['Kind'], ref_family=r.get('Family'),
+                       ref_type=r.get('Type'), ref_size=r.get('Size'))
         if q is not None:
-            rec.update(ai_id=q['ElementId'], ai_kind=q['Kind'], ai_family=q.get('Family'), ai_size=q.get('Size'),
-                       ai_custom=q.get('Family') not in owner_fams)
+            rec.update(test_id=q['ElementId'], test_kind=q['Kind'], test_family=q.get('Family'), test_type=q.get('Type'),
+                       test_size=q.get('Size'), test_custom=q.get('Family') not in owner_fams)
         return rec
 
     for dd, i, j in pairs:
@@ -428,6 +473,8 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
             st = u'類型不符'
         elif text_type(r.get('Size')) != text_type(q.get('Size')):
             st = u'尺寸不符'
+        elif type_changed(r, q):
+            st = u'類型不符'
         elif dd > EXACT:
             st = u'位置偏差'
         else:
@@ -447,7 +494,7 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
     for mi, mrec in enumerate(m_list):
         pm = (mrec['x'], mrec['y'], mrec['z'])
         for xi, xrec in enumerate(x_list):
-            if xrec.get('ai_kind') != mrec.get('owner_kind') or xrec['disc'] != mrec['disc']:
+            if xrec.get('test_kind') != mrec.get('ref_kind') or xrec['disc'] != mrec['disc']:
                 continue
             dd = dist(pm, (xrec['x'], xrec['y'], xrec['z']))
             if dd <= FIT_NEAR:
@@ -460,7 +507,7 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
         um.add(mi)
         ux.add(xi)
         mrec, xrec = m_list[mi], x_list[xi]
-        for k in ('ai_id', 'ai_kind', 'ai_family', 'ai_size', 'ai_custom'):
+        for k in ('test_id', 'test_kind', 'test_family', 'test_type', 'test_size', 'test_custom'):
             mrec[k] = xrec.get(k)
         mrec['dev_mm'] = dd
         mrec['status'] = u'位置不同'
@@ -479,25 +526,25 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
     for d in discs:
         co, ca = cov_o.get(d, [0.0, 0.0, 0.0]), cov_a.get(d, [0.0, 0.0, 0.0])
         per_disc[d] = dict(
-            owner_segs=sum(1 for r in od if r['Disc'] == d), ai_segs=sum(1 for r in ad if r['Disc'] == d),
-            owner_comps=sum(1 for r in of if r['Disc'] == d), ai_comps=sum(1 for r in af if r['Disc'] == d),
+            ref_segs=sum(1 for r in od if r['Disc'] == d), test_segs=sum(1 for r in ad if r['Disc'] == d),
+            ref_comps=sum(1 for r in of if r['Disc'] == d), test_comps=sum(1 for r in af if r['Disc'] == d),
             seg_status=count(seg_res, d), comp_status=count(comp_res, d),
-            owner_len_m=co[0] / 1000.0, cov_owner_pct=co[1] / co[0] * 100 if co[0] else 0,
-            cov_owner_same_pct=co[2] / co[0] * 100 if co[0] else 0,
-            ai_len_m=ca[0] / 1000.0, cov_ai_pct=ca[1] / ca[0] * 100 if ca[0] else 0,
+            ref_len_m=co[0] / 1000.0, cov_ref_pct=co[1] / co[0] * 100 if co[0] else 0,
+            cov_ref_same_pct=co[2] / co[0] * 100 if co[0] else 0,
+            test_len_m=ca[0] / 1000.0, cov_test_pct=ca[1] / ca[0] * 100 if ca[0] else 0,
         )
     tot = [sum(v[i] for v in cov_o.values()) for i in range(3)] if cov_o else [0.0, 0.0, 0.0]
     tota = [sum(v[i] for v in cov_a.values()) for i in range(3)] if cov_a else [0.0, 0.0, 0.0]
     summary = dict(
-        owner_total=len(owner), ai_total=len(ai), owner_segs=len(od), ai_segs=len(ad),
-        owner_comps=len(of), ai_comps=len(af),
+        ref_total=len(owner), test_total=len(ai), ref_segs=len(od), test_segs=len(ad),
+        ref_comps=len(of), test_comps=len(af),
         seg_status=count(seg_res), comp_status=count(comp_res),
         seg_reversed=sum(1 for x in seg_res if x.get('reversed')),
-        owner_len_m=tot[0] / 1000.0, cov_owner_pct=tot[1] / tot[0] * 100 if tot[0] else 0,
-        cov_owner_same_pct=tot[2] / tot[0] * 100 if tot[0] else 0,
-        ai_len_m=tota[0] / 1000.0, cov_ai_pct=tota[1] / tota[0] * 100 if tota[0] else 0,
-        ai_custom=sum(1 for r in ai if r.get('Family') not in owner_fams and not is_linear(r)),
-        fam_owner=len(owner_fams), fam_ai=len(set(r.get('Family') for r in ai)),
+        ref_len_m=tot[0] / 1000.0, cov_ref_pct=tot[1] / tot[0] * 100 if tot[0] else 0,
+        cov_ref_same_pct=tot[2] / tot[0] * 100 if tot[0] else 0,
+        test_len_m=tota[0] / 1000.0, cov_test_pct=tota[1] / tota[0] * 100 if tota[0] else 0,
+        test_custom=sum(1 for r in ai if r.get('Family') not in owner_fams and not is_linear(r)),
+        fam_ref=len(owner_fams), fam_test=len(set(r.get('Family') for r in ai)),
         per_disc=per_disc,
     )
     return seg_res, comp_res, summary
@@ -505,11 +552,12 @@ def compare(owner, ai, levels=None, systems=None, disciplines=None, log=None):
 
 # ---------------------------------------------------------------- screenshot list
 SEG_GRP = {u'多出': u'多出管段', u'斷點差異': u'管段斷點差異', u'位置偏差': u'管段位置偏差', u'缺漏': u'缺漏管段',
+           u'位置不同': u'管段位置不同', u'類型不符': u'管段類型不符',
            u'尺寸不符': u'管段尺寸不符'}
 COMP_GRP = {u'缺漏': u'缺漏元件', u'多出': u'多出元件', u'尺寸不符': u'元件尺寸不符', u'位置不同': u'元件位置不同',
-            u'類型不符': u'元件類型不符'}
-QUOTA = [(u'元件尺寸不符', 6), (u'管段尺寸不符', 4), (u'元件類型不符', 4), (u'缺漏管段', 4), (u'多出管段', 4),
-         (u'缺漏元件', 4), (u'非標準族群', 3), (u'多出元件', 3), (u'管段斷點差異', 2), (u'元件位置不同', 2),
+            u'類型不符': u'元件類型不符', u'位置偏差': u'元件位置偏差'}
+QUOTA = [(u'元件尺寸不符', 6), (u'管段尺寸不符', 4), (u'元件類型不符', 4), (u'管段類型不符', 2), (u'缺漏管段', 4), (u'多出管段', 4),
+         (u'缺漏元件', 4), (u'非標準族群', 3), (u'多出元件', 3), (u'管段位置不同', 2), (u'管段斷點差異', 2), (u'元件位置不同', 2), (u'元件位置偏差', 2),
          (u'管段位置偏差', 2)]
 
 
@@ -523,7 +571,7 @@ def issues_of(seg_res, comp_res):
             out.append(y)
     for x in comp_res:
         g = COMP_GRP.get(x['status'])
-        if x.get('ai_custom') and x['status'] != u'尺寸不符':
+        if x.get('test_custom') and x['status'] != u'尺寸不符':
             g = u'非標準族群'
         if g:
             y = dict(x)
@@ -558,15 +606,15 @@ def make_shots(issues, owner, ai, margin_xy=2500.0, margin_z=1200.0, link=6000.0
             for i in range(len(lst)):
                 groups.setdefault(find(i), []).append(lst[i])
             for cl in groups.values():
-                oids = [x['owner_id'] for x in cl if x.get('owner_id') is not None]
-                aids = [x['ai_id'] for x in cl if x.get('ai_id') is not None]
+                oids = [x['ref_id'] for x in cl if x.get('ref_id') is not None]
+                aids = [x['test_id'] for x in cl if x.get('test_id') is not None]
                 boxes = [ob[i] for i in oids if i in ob] + [ab[i] for i in aids if i in ab]
                 boxes = [b for b in boxes if b.get('BBMinX') is not None]
                 if not boxes:
                     continue
                 lo = [min(b[k] for b in boxes) for k in ('BBMinX', 'BBMinY', 'BBMinZ')]
                 hi = [max(b[k] for b in boxes) for k in ('BBMaxX', 'BBMaxY', 'BBMaxZ')]
-                gc.append(dict(group=grp, floor=floor, n=len(cl), owner_ids=oids, ai_ids=aids,
+                gc.append(dict(group=grp, floor=floor, n=len(cl), ref_ids=oids, test_ids=aids,
                                minx=lo[0] - margin_xy, miny=lo[1] - margin_xy, minz=lo[2] - margin_z,
                                maxx=hi[0] + margin_xy, maxy=hi[1] + margin_xy, maxz=hi[2] + margin_z))
         # most issues first; on ties prefer floors not shot yet
@@ -579,13 +627,13 @@ def make_shots(issues, owner, ai, margin_xy=2500.0, margin_z=1200.0, link=6000.0
         clusters.extend(picked)
     for i, c in enumerate(clusters):
         c['shot_id'] = u'S%02d' % (i + 1)
-        c['owner_ids'] = u';'.join(text_type(v) for v in c['owner_ids'])
-        c['ai_ids'] = u';'.join(text_type(v) for v in c['ai_ids'])
+        c['ref_ids'] = u';'.join(text_type(v) for v in c['ref_ids'])
+        c['test_ids'] = u';'.join(text_type(v) for v in c['test_ids'])
     return clusters
 
 
 SHOT_HEADER = ['shot_id', 'title', 'group', 'floor', 'n', 'minx', 'miny', 'minz', 'maxx', 'maxy', 'maxz',
-               'owner_ids', 'ai_ids']
+               'ref_ids', 'test_ids']
 
 
 # ---------------------------------------------------------------- output
@@ -626,31 +674,31 @@ def summary_text(S, owner_name, ai_name, L='zh'):
         (u'參考模型：%s' if zh else u'Reference model: %s') % owner_name,
         (u'受測模型：%s' if zh else u'Model under test: %s') % ai_name,
         u'',
-        (u'元件數：參考 %d／受測 %d' if zh else u'Elements: reference %d / test %d') % (S['owner_total'], S['ai_total']),
+        (u'元件數：參考 %d／受測 %d' if zh else u'Elements: reference %d / test %d') % (S['ref_total'], S['test_total']),
         (u'中心線：參考 %.1f m，被受測模型以相同尺寸覆蓋 %.2f%%（任何尺寸 %.2f%%）' if zh else
          u'Centerline: reference %.1f m, covered by test model at same size %.2f%% (any size %.2f%%)')
-        % (S['owner_len_m'], S['cov_owner_same_pct'], S['cov_owner_pct']),
+        % (S['ref_len_m'], S['cov_ref_same_pct'], S['cov_ref_pct']),
         (u'受測模型管段總長 %.1f m，其中 %.2f%% 與參考模型重疊' if zh else
          u'Test model segment length %.1f m, %.2f%% overlaps the reference')
-        % (S['ai_len_m'], S['cov_ai_pct']),
+        % (S['test_len_m'], S['cov_test_pct']),
         (u'受測模型使用參考模型沒有的族群：%d 個元件（族群數 參考 %d／受測 %d）' if zh else
          u'Test-model components using families not in the reference: %d (families: reference %d / test %d)')
-        % (S['ai_custom'], S['fam_owner'], S['fam_ai']),
+        % (S['test_custom'], S['fam_ref'], S['fam_test']),
     ]
-    seg_keys = (u'一致', u'位置偏差', u'斷點差異', u'尺寸不符', u'缺漏', u'多出')
+    seg_keys = (u'一致', u'位置偏差', u'斷點差異', u'位置不同', u'尺寸不符', u'類型不符', u'缺漏', u'多出')
     comp_keys = (u'一致', u'位置偏差', u'位置不同', u'尺寸不符', u'類型不符', u'缺漏', u'多出')
     for d, P in sorted(S['per_disc'].items()):
         lines.append(u'')
         lines.append(u'[%s]' % DISC_NAME[L].get(d, d))
-        if P['owner_segs'] or P['ai_segs']:
+        if P['ref_segs'] or P['test_segs']:
             lines.append((u'  管段（參考 %d、受測 %d），中心線覆蓋 %.1f%%：' if zh else
                           u'  Segments (reference %d, test %d), centerline coverage %.1f%%:')
-                         % (P['owner_segs'], P['ai_segs'], P['cov_owner_same_pct']))
-            lines += block(P['seg_status'], P['owner_segs'], seg_keys)
-        if P['owner_comps'] or P['ai_comps']:
+                         % (P['ref_segs'], P['test_segs'], P['cov_ref_same_pct']))
+            lines += block(P['seg_status'], P['ref_segs'], seg_keys)
+        if P['ref_comps'] or P['test_comps']:
             lines.append((u'  元件（參考 %d、受測 %d）：' if zh else u'  Components (reference %d, test %d):')
-                         % (P['owner_comps'], P['ai_comps']))
-            lines += block(P['comp_status'], P['owner_comps'], comp_keys)
+                         % (P['ref_comps'], P['test_comps']))
+            lines += block(P['comp_status'], P['ref_comps'], comp_keys)
     lines.append(u'')
     lines.append((u'起訖方向相反的管段 %d 段（幾何相同，不算差異）' if zh else
                   u'%d segments drawn in reverse direction (same geometry, not counted)') % S['seg_reversed'])
@@ -660,14 +708,15 @@ def summary_text(S, owner_name, ai_name, L='zh'):
     return u'\r\n'.join(lines)
 
 
-DETAIL_HEADER = ['grp', 'disc', 'system', 'floor', 'level', 'owner_id', 'ai_id', 'dev_mm', 'owner_size', 'ai_size',
-                 'owner_family', 'ai_family', 'x', 'y', 'z']
+DETAIL_HEADER = ['grp', 'disc', 'system', 'floor', 'level', 'ref_id', 'test_id', 'dev_mm', 'ref_size', 'test_size',
+                 'ref_family', 'test_family', 'ref_type', 'test_type', 'x', 'y', 'z']
 DETAIL_NAMES = {
     'zh': [u'差異類別', u'專業', u'系統', u'實際樓層', u'參考樓層', u'參考模型ElementId', u'受測模型ElementId',
-           u'距離_mm', u'參考尺寸', u'受測尺寸', u'參考族群', u'受測族群', u'X_mm', u'Y_mm', u'Z_mm'],
+           u'距離_mm', u'參考尺寸', u'受測尺寸', u'參考族群', u'受測族群', u'參考類型', u'受測類型',
+           u'X_mm', u'Y_mm', u'Z_mm'],
     'en': [u'Issue', u'Discipline', u'System', u'Floor', u'Ref level', u'Reference ElementId', u'Test ElementId',
            u'Distance_mm', u'Reference size', u'Test size', u'Reference family', u'Test family',
-           u'X_mm', u'Y_mm', u'Z_mm'],
+           u'Reference type', u'Test type', u'X_mm', u'Y_mm', u'Z_mm'],
 }
 FILES = {
     'zh': dict(segs=u'管段比對.csv', comps=u'元件比對.csv', detail=u'差異明細.csv', summary=u'比對摘要.txt',
@@ -696,12 +745,12 @@ def run(owner_csv, ai_csv, out_dir, levels=None, systems=None, disciplines=None,
     shots = make_shots(issues, owner, ai)
     F = FILES[L]
 
-    sh = ['status', 'disc', 'system', 'owner_id', 'ai_id', 'dev_mm', 'owner_size', 'ai_size', 'owner_family',
-          'ai_family', 'floor', 'level', 'length', 'len_diff_mm', 'reversed', 'x', 'y', 'z']
+    sh = ['status', 'disc', 'system', 'ref_id', 'test_id', 'dev_mm', 'ref_size', 'test_size', 'ref_family',
+          'test_family', 'ref_type', 'test_type', 'floor', 'level', 'length', 'len_diff_mm', 'reversed', 'x', 'y', 'z']
     write_csv(os.path.join(out_dir, F['segs']), sh, _translated(seg_res, ['status'], L))
-    ch = ['status', 'disc', 'system', 'owner_id', 'ai_id', 'dev_mm', 'owner_kind', 'ai_kind', 'owner_family',
-          'ai_family', 'owner_size', 'ai_size', 'ai_custom', 'floor', 'level', 'category', 'x', 'y', 'z']
-    write_csv(os.path.join(out_dir, F['comps']), ch, _translated(comp_res, ['status', 'owner_kind', 'ai_kind'], L))
+    ch = ['status', 'disc', 'system', 'ref_id', 'test_id', 'dev_mm', 'ref_kind', 'test_kind', 'ref_family',
+          'test_family', 'ref_type', 'test_type', 'ref_size', 'test_size', 'test_custom', 'floor', 'level', 'category', 'x', 'y', 'z']
+    write_csv(os.path.join(out_dir, F['comps']), ch, _translated(comp_res, ['status', 'ref_kind', 'test_kind'], L))
     names = DETAIL_NAMES[L]
     detail = []
     for x in _translated(issues, ['grp'], L):

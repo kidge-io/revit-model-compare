@@ -29,11 +29,11 @@ PIXELS = 2400
 CATS = [getattr(BuiltInCategory, n) for n in MEP_CATEGORIES if hasattr(BuiltInCategory, n)]
 COLORS = {
     u'缺漏元件': (220, 30, 30), u'缺漏管段': (220, 30, 30),
-    u'元件尺寸不符': (240, 180, 0), u'管段尺寸不符': (240, 180, 0), u'元件類型不符': (240, 180, 0),
+    u'元件尺寸不符': (240, 180, 0), u'管段尺寸不符': (240, 180, 0), u'元件類型不符': (240, 180, 0), u'管段類型不符': (240, 180, 0),
     u'多出元件': (255, 120, 0), u'多出管段': (255, 120, 0),
     u'非標準族群': (170, 60, 200),
-    u'管段斷點差異': (30, 120, 220), u'元件位置不同': (30, 120, 220),
-    u'管段位置偏差': (30, 170, 160),
+    u'管段斷點差異': (30, 120, 220), u'元件位置不同': (30, 120, 220), u'管段位置不同': (30, 120, 220),
+    u'管段位置偏差': (30, 170, 160), u'元件位置偏差': (30, 170, 160),
 }
 COLORS.update(dict((TR[k], v) for k, v in list(COLORS.items()) if k in TR))  # English shots.csv
 
@@ -88,7 +88,7 @@ if not csv_path:
 which = forms.CommandSwitchWindow.show([m('owner'), m('ai')], message=m('which_model'))
 if not which:
     raise SystemExit
-id_col, tag = ('owner_ids', 'ref') if which == m('owner') else ('ai_ids', 'test')
+id_col, tag = ('ref_ids', 'ref') if which == m('owner') else ('test_ids', 'test')
 out_dir = forms.pick_folder(title=m('pick_img'))
 if not out_dir:
     raise SystemExit
@@ -118,7 +118,8 @@ if old:
 done, missing_ids, log = 0, 0, []
 for s in shots:
     name = u'MC_%s_%s' % (s['shot_id'], tag)
-    ids = [x for x in s.get(id_col, u'').split(u';') if x.strip()]
+    legacy = {'ref_ids': 'owner_ids', 'test_ids': 'ai_ids'}[id_col]  # shots.csv from earlier builds
+    ids = [x for x in (s.get(id_col) or s.get(legacy) or u'').split(u';') if x.strip()]
     hl = [i for i in (eid(x) for x in ids) if doc.GetElement(i) is not None]
     missing_ids += len(ids) - len(hl)
 

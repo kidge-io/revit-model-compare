@@ -120,9 +120,9 @@ f.close()
 ss, cs = S['seg_status'], S['comp_status']
 td = TaskDialog(u'ModelCompare')
 td.MainInstruction = m('done_title', n_issues, n_shots)
-td.MainContent = m('done_body', S['cov_owner_same_pct'], ss.get(u'一致', 0), S['owner_segs'],
-                   cs.get(u'一致', 0), S['owner_comps'], cs.get(u'缺漏', 0), cs.get(u'多出', 0),
-                   cs.get(u'尺寸不符', 0) + ss.get(u'尺寸不符', 0), S['ai_custom'], out_dir, level_note)
+td.MainContent = m('done_body', S['cov_ref_same_pct'], ss.get(u'一致', 0), S['ref_segs'],
+                   cs.get(u'一致', 0), S['ref_comps'], cs.get(u'缺漏', 0), cs.get(u'多出', 0),
+                   cs.get(u'尺寸不符', 0) + ss.get(u'尺寸不符', 0), S['test_custom'], out_dir, level_note)
 td.FooterText = m('done_footer')
 td.CommonButtons = TaskDialogCommonButtons.Ok | TaskDialogCommonButtons.Close
 td.DefaultButton = TaskDialogResult.Ok

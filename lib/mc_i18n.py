@@ -24,10 +24,10 @@ def lang():
 TR = {
     u'一致': u'Match', u'位置偏差': u'Minor offset', u'斷點差異': u'Break offset', u'位置不同': u'Moved',
     u'尺寸不符': u'Size mismatch', u'類型不符': u'Type mismatch', u'缺漏': u'Missing', u'多出': u'Extra',
-    u'多出管段': u'Extra segment', u'缺漏管段': u'Missing segment', u'管段斷點差異': u'Segment break offset',
+    u'多出管段': u'Extra segment', u'缺漏管段': u'Missing segment', u'管段斷點差異': u'Segment break offset', u'管段位置不同': u'Segment moved', u'管段類型不符': u'Segment type mismatch',
     u'管段位置偏差': u'Segment minor offset', u'管段尺寸不符': u'Segment size mismatch',
     u'缺漏元件': u'Missing component', u'多出元件': u'Extra component', u'元件尺寸不符': u'Component size mismatch',
-    u'元件位置不同': u'Component moved', u'元件類型不符': u'Component type mismatch',
+    u'元件位置不同': u'Component moved', u'元件位置偏差': u'Component minor offset', u'元件類型不符': u'Component type mismatch',
     u'非標準族群': u'Non-reference family',
     u'三通': u'Tee', u'四通': u'Cross', u'彎頭': u'Elbow', u'大小頭/轉接頭': u'Transition', u'管帽': u'Cap',
     u'接頭': u'Coupling', u'風門/閥': u'Damper/valve', u'風口': u'Air terminal', u'撒水頭': u'Sprinkler',

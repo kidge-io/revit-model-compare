@@ -96,7 +96,7 @@ def build(m, variant):
 EXPECTED = {
     'seg_status': {u'斷點差異': 1, u'位置偏差': 1, u'多出': 1},
     'comp_status': {u'位置不同': 1, u'缺漏': 1, u'尺寸不符': 1},
-    'ai_custom': 1,
+    'test_custom': 1,
 }
 
 

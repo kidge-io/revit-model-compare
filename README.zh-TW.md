@@ -1,5 +1,5 @@
 # Revit Model Compare
-
+   ![Revit Model Compare demo](docs/demo.gif)
 **量化 AI 或外掛自動產生的 MEP 模型，跟參考模型差多少。**
 
 [English](README.md)

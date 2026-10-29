@@ -1,5 +1,5 @@
 # Revit Model Compare
-
+   ![Revit Model Compare demo](docs/demo.gif)
 **Measure how accurately an AI- or plugin-generated MEP model reproduces a reference model.**
 
 [繁體中文說明](README.zh-TW.md)
